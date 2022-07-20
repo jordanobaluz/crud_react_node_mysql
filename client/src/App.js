@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Axios from "axios";
+import Card from "./components/cards/card";
 
 function App() {
   const [values, setValues] = useState();
+  const [listGames, setListGames] = useState();
 
   const handleChangeValues = (values) => {
     setValues((prevValue) => ({
@@ -19,6 +21,12 @@ function App() {
       category: values.category,
     }).then((response) => console.log(response));
   };
+
+  useEffect(() => {
+    Axios.get("http://localhost:3001/getCards").then((response) => {
+      setListGames(response.data);
+    });
+  }, []);
 
   return (
     <div className="app-container">
@@ -49,6 +57,11 @@ function App() {
           Cadastrar
         </button>
       </div>
+
+      {typeof listGames !== "undefined" &&
+        listGames.map((value) => {
+          return <Card></Card>;
+        })}
     </div>
   );
 }
